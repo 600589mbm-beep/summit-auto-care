@@ -86,13 +86,17 @@
 
   /* buttons */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;font-family:'General Sans';font-weight:600;
-    font-size:.95rem;letter-spacing:.01em;padding:.85rem 1.5rem;border-radius:2px;cursor:pointer;border:0;white-space:nowrap;
+    font-size:.95rem;letter-spacing:.01em;padding:.85rem 1.6rem;border-radius:999px;cursor:pointer;border:0;white-space:nowrap;
     transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,background .2s,color .2s}
   .btn:hover{transform:translateY(-2px)}
-  .btn-cta{background:#df4f29;color:#fff;box-shadow:0 10px 30px -14px rgba(223,79,41,.7)}
-  .btn-cta:hover{background:#c5401d;box-shadow:0 18px 44px -16px rgba(223,79,41,.75)}
-  .btn-gold{background:transparent;color:#ece6dc;border:1px solid #3a3f47}
-  .btn-gold:hover{border-color:#c38a4f;color:#fff;box-shadow:0 14px 40px -22px rgba(195,138,79,.6)}
+  /* primary action = warm tungsten gold */
+  .btn-cta{background:#c38a4f;color:#0b0c0e;box-shadow:0 12px 32px -16px rgba(195,138,79,.7)}
+  .btn-cta:hover{background:#a56f3d;box-shadow:0 18px 44px -18px rgba(195,138,79,.8)}
+  /* hero / high-contrast action = white */
+  .btn-white{background:#fff;color:#0b0c0e}
+  .btn-white:hover{background:#ece6dc;transform:translateY(-2px) scale(1.02)}
+  .btn-gold{background:transparent;color:#ece6dc;border:1px solid rgba(255,255,255,.45)}
+  .btn-gold:hover{border-color:#fff;color:#fff;box-shadow:0 14px 40px -22px rgba(195,138,79,.6)}
   .btn-solidgold{background:#c38a4f;color:#0b0c0e}
   .btn-solidgold:hover{background:#d8b487}
   .btn-line{background:transparent;color:#0b0c0e;border:1px solid rgba(11,12,14,.4)}
@@ -104,9 +108,9 @@
   .group:hover .swipe svg,.swipe:hover svg{transform:translateX(5px)}
 
   /* card */
-  .card{background:linear-gradient(180deg,#141619,#101215);border:1px solid #23272d;border-radius:4px;
+  .card{background:linear-gradient(180deg,#12171f,#0e1116);border:1px solid #1d242e;border-radius:24px;
     transition:transform .4s cubic-bezier(.2,.7,.2,1),border-color .4s,box-shadow .4s}
-  .card:hover{transform:translateY(-6px);border-color:#3a3f47;box-shadow:0 30px 60px -28px rgba(0,0,0,.9)}
+  .card:hover{transform:translateY(-8px);border-color:#3a3f47;box-shadow:0 25px 50px -12px rgba(0,0,0,.55)}
   .card-hl:hover{border-color:rgba(195,138,79,.55)}
 
   /* marquee */
@@ -114,9 +118,16 @@
   @keyframes scroll{to{transform:translateX(-50%)}}
   .marq-mask{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 
-  /* ticket */
-  .ticket{background:linear-gradient(180deg,#16181c,#101215);border:1px solid #2a2f36;border-radius:6px;
-    box-shadow:0 40px 80px -34px rgba(0,0,0,.9), 0 0 0 1px rgba(195,138,79,.05);overflow:hidden}
+  /* ticket — glassmorphism over hero photo */
+  .ticket{background:rgba(255,255,255,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.14);border-radius:24px;
+    box-shadow:0 40px 80px -34px rgba(0,0,0,.9);overflow:hidden}
+
+  /* hero photo background with warm dark overlay */
+  .hero-bg{background:
+    linear-gradient(rgba(10,12,15,.74),rgba(10,12,15,.9)),
+    radial-gradient(700px 460px at 80% 8%, rgba(195,138,79,.22), transparent 60%),
+    url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070') center/cover no-repeat;}
 
   /* header scrolled */
   header{transition:background .35s,border-color .35s,backdrop-filter .35s}
@@ -130,7 +141,7 @@
   .sheet-top{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #23272d}
   .sheet-top b{font-family:'Clash Display';font-weight:600;font-size:1.25rem;letter-spacing:-.01em;color:#ece6dc}
   .x{background:none;border:0;color:#928c81;font-size:1.5rem;cursor:pointer;line-height:1;transition:color .2s}
-  .x:hover{color:#df4f29}
+  .x:hover{color:#c38a4f}
   .steps{display:flex;background:#141619;border-bottom:1px solid #23272d}
   .steps div{flex:1;text-align:center;padding:12px 4px;font-weight:600;letter-spacing:.04em;font-size:.74rem;text-transform:uppercase;color:#6f6a61;border-bottom:2px solid transparent}
   .steps div.on{color:#c38a4f;border-color:#c38a4f}
@@ -233,10 +244,8 @@
 <main id="top">
 
   <!-- HERO -->
-  <section class="relative pt-32 md:pt-44 pb-20 md:pb-28 overflow-hidden">
-    <!-- oversized ghost word -->
-    <span aria-hidden="true" class="pointer-events-none select-none absolute -top-2 right-[-4%] font-display font-semibold text-[26vw] leading-none text-white/[.022] hidden md:block">1926</span>
-    <div class="max-w-[1180px] mx-auto px-5 md:px-7 grid md:grid-cols-[1.12fr_.88fr] gap-12 md:gap-14 items-center">
+  <section class="hero-bg relative min-h-screen flex items-center pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7 grid md:grid-cols-[1.12fr_.88fr] gap-12 md:gap-14 items-center w-full">
       <div>
         <div class="flex flex-wrap items-center gap-3 mb-7">
           <span class="hx hx1 inline-flex items-center gap-2 border border-line rounded-full px-3.5 py-1.5 text-[.72rem] tracking-[.18em] uppercase text-gold2">
@@ -254,7 +263,7 @@
           Three generations of ASE-certified hands in Apple Valley. Tires to engines — diagnosed precisely, priced upfront, finished right.
         </p>
         <div class="hx hx4 flex flex-wrap gap-3 mt-9">
-          <button class="btn btn-cta text-[1.02rem] px-7 py-4" onclick="openBooking()">Schedule Online</button>
+          <button class="btn btn-white text-[1.02rem] px-7 py-4" onclick="openBooking()">Schedule Online</button>
           <a class="btn btn-gold text-[1.02rem] px-7 py-4" href="tel:+19525550142">
             <svg class="ph-ic text-gold" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
             (952) 555-0142
@@ -269,19 +278,19 @@
 
       <!-- estimate ticket -->
       <div class="hx hx3 ticket md:rotate-[1.2deg] md:hover:rotate-0 transition-transform duration-500" aria-hidden="true">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-dashed border-line">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-dashed border-white/20">
           <span class="eyebrow !tracking-[.2em]">Service Estimate</span>
           <b class="font-display font-semibold text-ink">#4821</b>
         </div>
         <ul class="px-6 py-2">
-          <li class="flex justify-between py-3 border-b border-line/60 text-[.96rem]"><span class="text-mute">Full synthetic oil change</span><b class="font-display font-medium text-ink">$69</b></li>
-          <li class="flex justify-between py-3 border-b border-line/60 text-[.96rem]"><span class="text-mute">Brake inspection</span><b class="font-display font-medium text-gold">Free</b></li>
-          <li class="flex justify-between py-3 border-b border-line/60 text-[.96rem]"><span class="text-mute">Tire rotation</span><b class="font-display font-medium text-ink">$25</b></li>
-          <li class="flex justify-between py-3 text-[.96rem]"><span class="text-mute">Multi-point check</span><b class="font-display font-medium text-gold">Free</b></li>
+          <li class="flex justify-between py-3 border-b border-white/10 text-[.96rem]"><span class="text-gray-300">Full synthetic oil change</span><b class="font-display font-medium text-ink">$69</b></li>
+          <li class="flex justify-between py-3 border-b border-white/10 text-[.96rem]"><span class="text-gray-300">Brake inspection</span><b class="font-display font-medium text-gold">Free</b></li>
+          <li class="flex justify-between py-3 border-b border-white/10 text-[.96rem]"><span class="text-gray-300">Tire rotation</span><b class="font-display font-medium text-ink">$25</b></li>
+          <li class="flex justify-between py-3 text-[.96rem]"><span class="text-gray-300">Multi-point check</span><b class="font-display font-medium text-gold">Free</b></li>
         </ul>
-        <div class="flex items-center justify-between px-6 py-4 bg-gold text-base">
-          <span class="text-[.78rem] uppercase tracking-[.14em] font-semibold">Out the door</span>
-          <b class="font-display font-semibold text-[1.45rem]">$94</b>
+        <div class="flex items-center justify-between mx-4 mb-4 mt-2 px-5 py-4 rounded-2xl bg-black/55">
+          <span class="text-[.78rem] uppercase tracking-[.14em] font-semibold text-gray-300">Out the door</span>
+          <b class="font-display font-semibold text-[1.7rem] text-gold">$94</b>
         </div>
       </div>
     </div>
