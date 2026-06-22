@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  SUMMIT AUTO CARE — premium garage demo (single file)
+  Stack: TailwindCSS (CDN) + vanilla JS. Fonts via Fontshare.
+  Swap per prospect:
+    [SHOP NAME] Summit Auto Care · [TOWN] Apple Valley, MN
+    [PHONE] (952) 555-0142  (update every tel:+1952... link)
+    [ADDRESS] 1450 Cedar Ave, Apple Valley, MN 55124
+    [FOUNDED] 1926  <- real founding year only. Never fabricate.
+    [HOURS] Mon-Fri 7:30-6, Sat 8-2
+    Reviews / Coupons / Map iframe -> real values only.
+  Booking flow is a front-end demo (no backend) — shows a
+  confirmation screen. Wire final step to email/Twilio for live.
+  ============================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summit Auto Care — Complete Auto Repair in Apple Valley, MN | Since 1926</title>
+<meta name="description" content="Complete auto care in Apple Valley since 1926. Tires, oil changes, brakes, alignment, batteries, engine repair & inspections. Schedule online or call (952) 555-0142.">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          base:'#0b0c0e', panel:'#141619', panel2:'#191c20', steel:'#23272d',
+          line:'#2a2f36', gold:'#c38a4f', gold2:'#d8b487',
+          cta:'#df4f29', ctad:'#c5401d', ink:'#ece6dc', mute:'#928c81', muted2:'#6f6a61',
+        },
+        fontFamily: {
+          display:['"Clash Display"','ui-sans-serif','system-ui','sans-serif'],
+          body:['"General Sans"','ui-sans-serif','system-ui','sans-serif'],
+        },
+        boxShadow: {
+          lift:'0 24px 60px -22px rgba(0,0,0,.85)',
+          gold:'0 18px 50px -20px rgba(195,138,79,.45)',
+          cta:'0 16px 40px -16px rgba(223,79,41,.6)',
+        },
+      },
+    },
+  }
+</script>
+<style>
+  :root{ --gold:#c38a4f; --cta:#df4f29; }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'General Sans',system-ui,sans-serif;background:#0b0c0e;color:#ece6dc;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4,.dsp{font-family:'Clash Display','General Sans',sans-serif;letter-spacing:-.01em}
+  a{text-decoration:none;color:inherit}
+  ::selection{background:#c38a4f;color:#0b0c0e}
+  :focus-visible{outline:2px solid #d8b487;outline-offset:3px;border-radius:2px}
+  .ph-ic{width:1.05em;height:1.05em;display:inline-block;vertical-align:-2px}
+
+  /* warm tungsten ambient wash + film grain */
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(680px 420px at 82% -8%, rgba(195,138,79,.16), transparent 62%),
+      radial-gradient(520px 380px at -6% 18%, rgba(216,180,135,.06), transparent 60%),
+      radial-gradient(900px 600px at 50% 120%, rgba(195,138,79,.05), transparent 60%);}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  main,header,footer,.mcall{position:relative;z-index:2}
+
+  .eyebrow{font-family:'General Sans';font-weight:600;text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:#c38a4f}
+  .hair{height:1px;background:linear-gradient(90deg,transparent,#2a2f36 18%,#2a2f36 82%,transparent)}
+
+  /* scroll reveal */
+  [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal].in{opacity:1;transform:none}
+  [data-reveal][data-delay="1"]{transition-delay:.08s}
+  [data-reveal][data-delay="2"]{transition-delay:.16s}
+  [data-reveal][data-delay="3"]{transition-delay:.24s}
+  [data-reveal][data-delay="4"]{transition-delay:.32s}
+
+  /* hero entrance */
+  @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .hx{opacity:0;animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .hx1{animation-delay:.12s}.hx2{animation-delay:.24s}.hx3{animation-delay:.36s}.hx4{animation-delay:.48s}.hx5{animation-delay:.6s}
+  .heroline{display:inline-block;overflow:hidden}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;font-family:'General Sans';font-weight:600;
+    font-size:.95rem;letter-spacing:.01em;padding:.85rem 1.5rem;border-radius:2px;cursor:pointer;border:0;white-space:nowrap;
+    transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,background .2s,color .2s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-cta{background:#df4f29;color:#fff;box-shadow:0 10px 30px -14px rgba(223,79,41,.7)}
+  .btn-cta:hover{background:#c5401d;box-shadow:0 18px 44px -16px rgba(223,79,41,.75)}
+  .btn-gold{background:transparent;color:#ece6dc;border:1px solid #3a3f47}
+  .btn-gold:hover{border-color:#c38a4f;color:#fff;box-shadow:0 14px 40px -22px rgba(195,138,79,.6)}
+  .btn-solidgold{background:#c38a4f;color:#0b0c0e}
+  .btn-solidgold:hover{background:#d8b487}
+  .btn-line{background:transparent;color:#0b0c0e;border:1px solid rgba(11,12,14,.4)}
+  .btn-line:hover{background:#0b0c0e;color:#ece6dc}
+
+  /* link underline sweep */
+  .swipe{position:relative;display:inline-flex;align-items:center;gap:.4rem;color:#c38a4f;font-weight:600;font-size:.9rem;letter-spacing:.02em}
+  .swipe svg{transition:transform .3s}
+  .group:hover .swipe svg,.swipe:hover svg{transform:translateX(5px)}
+
+  /* card */
+  .card{background:linear-gradient(180deg,#141619,#101215);border:1px solid #23272d;border-radius:4px;
+    transition:transform .4s cubic-bezier(.2,.7,.2,1),border-color .4s,box-shadow .4s}
+  .card:hover{transform:translateY(-6px);border-color:#3a3f47;box-shadow:0 30px 60px -28px rgba(0,0,0,.9)}
+  .card-hl:hover{border-color:rgba(195,138,79,.55)}
+
+  /* marquee */
+  .marq{display:flex;gap:3.5rem;white-space:nowrap;animation:scroll 32s linear infinite}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+  .marq-mask{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+
+  /* ticket */
+  .ticket{background:linear-gradient(180deg,#16181c,#101215);border:1px solid #2a2f36;border-radius:6px;
+    box-shadow:0 40px 80px -34px rgba(0,0,0,.9), 0 0 0 1px rgba(195,138,79,.05);overflow:hidden}
+
+  /* header scrolled */
+  header{transition:background .35s,border-color .35s,backdrop-filter .35s}
+  header.scrolled{background:rgba(11,12,14,.82);backdrop-filter:blur(14px);border-color:#1d2127}
+
+  /* ===== Booking modal components (JS-driven, restyled) ===== */
+  .modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(6,7,8,.78);backdrop-filter:blur(6px);padding:20px;overflow-y:auto}
+  .modal.open{display:grid;place-items:start center}
+  .sheet{background:#101215;width:100%;max-width:560px;margin:auto;border:1px solid #2a2f36;border-radius:8px;
+    box-shadow:0 50px 100px -30px rgba(0,0,0,.95);animation:rise .45s cubic-bezier(.2,.7,.2,1)}
+  .sheet-top{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #23272d}
+  .sheet-top b{font-family:'Clash Display';font-weight:600;font-size:1.25rem;letter-spacing:-.01em;color:#ece6dc}
+  .x{background:none;border:0;color:#928c81;font-size:1.5rem;cursor:pointer;line-height:1;transition:color .2s}
+  .x:hover{color:#df4f29}
+  .steps{display:flex;background:#141619;border-bottom:1px solid #23272d}
+  .steps div{flex:1;text-align:center;padding:12px 4px;font-weight:600;letter-spacing:.04em;font-size:.74rem;text-transform:uppercase;color:#6f6a61;border-bottom:2px solid transparent}
+  .steps div.on{color:#c38a4f;border-color:#c38a4f}
+  .sheet-body{padding:26px 24px}
+  .sheet-body h4{font-family:'Clash Display';font-weight:600;font-size:1.2rem;margin-bottom:18px;color:#ece6dc}
+  .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{border:1px solid #2a2f36;background:#15171b;color:#d7d1c7;padding:14px;border-radius:4px;font-weight:600;font-size:.95rem;
+    cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color .2s,background .2s,transform .2s}
+  .opt:hover{border-color:#3a3f47;transform:translateY(-2px)}
+  .opt.sel{border-color:#c38a4f;background:rgba(195,138,79,.1);color:#fff}
+  .chip-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+  .chip{border:1px solid #2a2f36;background:#15171b;color:#d7d1c7;padding:11px 15px;border-radius:4px;cursor:pointer;font-weight:600;
+    font-size:.92rem;text-align:center;min-width:66px;transition:border-color .2s,background .2s,transform .2s}
+  .chip:hover{border-color:#3a3f47;transform:translateY(-2px)}
+  .chip.sel{border-color:#c38a4f;background:#c38a4f;color:#0b0c0e}
+  .chip small{display:block;font-weight:500;font-size:.68rem;color:#928c81;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+  .chip.sel small{color:rgba(11,12,14,.65)}
+  .fld{margin-bottom:14px}
+  .fld label{display:block;font-weight:600;font-size:.82rem;margin-bottom:6px;color:#b8b2a8}
+  .fld input{width:100%;padding:12px 14px;border:1px solid #2a2f36;background:#15171b;color:#ece6dc;border-radius:4px;font-family:'General Sans';font-size:.98rem}
+  .fld input::placeholder{color:#6f6a61}
+  .fld input:focus{outline:none;border-color:#c38a4f}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .err{display:none;background:rgba(223,79,41,.12);border:1px solid rgba(223,79,41,.4);color:#f0a48d;padding:10px 14px;border-radius:4px;font-size:.88rem;margin-bottom:16px;font-weight:600}
+  .sheet-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 24px;border-top:1px solid #23272d}
+  .lnk{background:none;border:0;color:#928c81;font-weight:600;cursor:pointer;font-size:.9rem;transition:color .2s}
+  .lnk:hover{color:#ece6dc}
+  .conf{text-align:center;padding:34px 24px}
+  .conf .ck{width:64px;height:64px;border-radius:50%;background:rgba(195,138,79,.14);border:1px solid #c38a4f;display:grid;place-items:center;margin:0 auto 18px;color:#c38a4f;font-size:1.9rem}
+  .conf h4{font-size:1.5rem;margin-bottom:10px}
+  .conf p{color:#928c81;max-width:38ch;margin:0 auto 8px}
+  .conf .summ{background:#15171b;border:1px solid #23272d;border-radius:4px;padding:16px;margin:22px auto 0;max-width:340px;text-align:left}
+  .conf .summ div{display:flex;justify-content:space-between;padding:7px 0;font-size:.92rem;border-bottom:1px solid #1d2127}
+  .conf .summ div:last-child{border:0}
+  .conf .summ span{color:#928c81}
+  .conf .summ b{font-family:'Clash Display';font-weight:600;color:#ece6dc}
+
+  /* mobile call bar */
+  .mcall{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:rgba(11,12,14,.92);backdrop-filter:blur(12px);border-top:1px solid #1d2127;padding:10px 12px;gap:9px}
+  .mcall .btn{flex:1;padding:13px}
+
+  .mobile-nav{display:none}
+  @media(max-width:768px){
+    .mobile-nav{position:absolute;top:64px;left:0;right:0;background:#101215;border-top:1px solid #1d2127;border-bottom:1px solid #1d2127;flex-direction:column;padding:6px 0}
+    .mobile-nav.open{display:flex}
+    .mobile-nav a{padding:13px 22px;color:#b8b2a8;font-weight:500;border-bottom:1px solid #16181c}
+    .mcall{display:flex}
+    body{padding-bottom:72px}
+    .opt-grid{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+    [data-reveal]{opacity:1!important;transform:none!important}
+    .hx{opacity:1!important}
+  }
+</style>
+</head>
+<body class="font-body">
+<div class="grain"></div>
+
+<!-- HEADER -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-transparent">
+  <div class="max-w-[1180px] mx-auto px-5 md:px-7 flex items-center justify-between h-16 md:h-[72px]">
+    <a href="#top" class="flex items-center gap-3 group">
+      <span class="relative w-10 h-10 grid place-items-center font-display font-semibold text-lg text-base bg-gold rounded-[3px] overflow-hidden">
+        S<span class="absolute inset-0 bg-gold2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 grid place-items-center text-base">S</span>
+      </span>
+      <span class="leading-none">
+        <b class="font-display font-semibold text-[1.15rem] tracking-tight text-ink block">Summit Auto</b>
+        <span class="text-[.62rem] tracking-[.26em] uppercase text-mute">Est. 1926 · Apple Valley</span>
+      </span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-[.92rem] text-mute font-medium">
+      <a href="#services" class="hover:text-ink transition-colors">Services</a>
+      <a href="#tires" class="hover:text-ink transition-colors">Tires</a>
+      <a href="#coupons" class="hover:text-ink transition-colors">Offers</a>
+      <a href="#tips" class="hover:text-ink transition-colors">Journal</a>
+      <a href="#visit" class="hover:text-ink transition-colors">Find Us</a>
+    </nav>
+    <div class="hidden md:flex items-center gap-5">
+      <a class="flex items-center gap-2 font-display font-medium text-ink text-[1.05rem]" href="tel:+19525550142">
+        <svg class="ph-ic text-gold" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+        (952) 555-0142
+      </a>
+      <button class="btn btn-cta" onclick="openBooking()">Book a Bay</button>
+    </div>
+    <button class="md:hidden text-ink" aria-label="Menu" onclick="document.getElementById('mnav').classList.toggle('open')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-nav" id="mnav">
+    <a href="#services" onclick="closeNav()">Services</a>
+    <a href="#tires" onclick="closeNav()">Tires</a>
+    <a href="#coupons" onclick="closeNav()">Offers</a>
+    <a href="#tips" onclick="closeNav()">Journal</a>
+    <a href="#visit" onclick="closeNav()">Find Us</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="relative pt-32 md:pt-44 pb-20 md:pb-28 overflow-hidden">
+    <!-- oversized ghost word -->
+    <span aria-hidden="true" class="pointer-events-none select-none absolute -top-2 right-[-4%] font-display font-semibold text-[26vw] leading-none text-white/[.022] hidden md:block">1926</span>
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7 grid md:grid-cols-[1.12fr_.88fr] gap-12 md:gap-14 items-center">
+      <div>
+        <div class="flex flex-wrap items-center gap-3 mb-7">
+          <span class="hx hx1 inline-flex items-center gap-2 border border-line rounded-full px-3.5 py-1.5 text-[.72rem] tracking-[.18em] uppercase text-gold2">
+            <span class="text-gold">★</span> A Century in the Bay · Since 1926
+          </span>
+          <span class="hx hx1 inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[.7rem] font-semibold uppercase tracking-[.12em] text-gold2/90 bg-gold/[.08] border border-gold/25">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span> Open now
+          </span>
+        </div>
+        <h1 class="font-display font-semibold leading-[.96] tracking-[-.02em] text-[clamp(2.7rem,6.4vw,5rem)] text-ink">
+          <span class="hx hx2 block">Old-world care.</span>
+          <span class="hx hx3 block">Modern <span class="text-gold">machines.</span></span>
+        </h1>
+        <p class="hx hx4 text-[1.12rem] leading-relaxed text-mute max-w-[40ch] mt-7">
+          Three generations of ASE-certified hands in Apple Valley. Tires to engines — diagnosed precisely, priced upfront, finished right.
+        </p>
+        <div class="hx hx4 flex flex-wrap gap-3 mt-9">
+          <button class="btn btn-cta text-[1.02rem] px-7 py-4" onclick="openBooking()">Schedule Online</button>
+          <a class="btn btn-gold text-[1.02rem] px-7 py-4" href="tel:+19525550142">
+            <svg class="ph-ic text-gold" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+            (952) 555-0142
+          </a>
+        </div>
+        <div class="hx hx5 flex flex-wrap gap-x-10 gap-y-5 mt-12">
+          <div><b class="font-display font-semibold text-[1.8rem] text-ink block leading-none">100<span class="text-gold">+</span></b><span class="text-[.85rem] text-mute mt-1 block">years in the bay</span></div>
+          <div class="border-l border-line pl-10"><b class="font-display font-semibold text-[1.8rem] text-ink block leading-none">24<span class="text-gold">mo</span></b><span class="text-[.85rem] text-mute mt-1 block">repair warranty</span></div>
+          <div class="border-l border-line pl-10"><b class="font-display font-semibold text-[1.8rem] text-ink block leading-none">4.9<span class="text-gold">★</span></b><span class="text-[.85rem] text-mute mt-1 block">312 reviews</span></div>
+        </div>
+      </div>
+
+      <!-- estimate ticket -->
+      <div class="hx hx3 ticket md:rotate-[1.2deg] md:hover:rotate-0 transition-transform duration-500" aria-hidden="true">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-dashed border-line">
+          <span class="eyebrow !tracking-[.2em]">Service Estimate</span>
+          <b class="font-display font-semibold text-ink">#4821</b>
+        </div>
+        <ul class="px-6 py-2">
+          <li class="flex justify-between py-3 border-b border-line/60 text-[.96rem]"><span class="text-mute">Full synthetic oil change</span><b class="font-display font-medium text-ink">$69</b></li>
+          <li class="flex justify-between py-3 border-b border-line/60 text-[.96rem]"><span class="text-mute">Brake inspection</span><b class="font-display font-medium text-gold">Free</b></li>
+          <li class="flex justify-between py-3 border-b border-line/60 text-[.96rem]"><span class="text-mute">Tire rotation</span><b class="font-display font-medium text-ink">$25</b></li>
+          <li class="flex justify-between py-3 text-[.96rem]"><span class="text-mute">Multi-point check</span><b class="font-display font-medium text-gold">Free</b></li>
+        </ul>
+        <div class="flex items-center justify-between px-6 py-4 bg-gold text-base">
+          <span class="text-[.78rem] uppercase tracking-[.14em] font-semibold">Out the door</span>
+          <b class="font-display font-semibold text-[1.45rem]">$94</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST MARQUEE -->
+  <div class="border-y border-line/70 bg-panel/40 py-4 marq-mask">
+    <div class="marq font-display font-medium text-[1.05rem] text-mute uppercase tracking-[.04em]">
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> ASE-Certified Techs</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> 24-Month / 24k Warranty</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> Free Loaner Cars</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> Upfront Written Estimates</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> Foreign &amp; Domestic</span>
+      <!-- duplicate for seamless loop -->
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> ASE-Certified Techs</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> 24-Month / 24k Warranty</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> Free Loaner Cars</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> Upfront Written Estimates</span>
+      <span class="flex items-center gap-3.5"><span class="text-gold">✦</span> Foreign &amp; Domestic</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-24 md:py-32">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7">
+      <div class="grid md:grid-cols-[1fr_auto] md:items-end gap-6 mb-14" data-reveal>
+        <div>
+          <div class="eyebrow mb-4">The Service Menu</div>
+          <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.3rem)] leading-[1.02] text-ink max-w-[18ch]">Everything your car needs, under one roof.</h2>
+        </div>
+        <p class="text-mute text-[1.05rem] max-w-[34ch] md:text-right md:pb-2">Foreign and domestic, cars and light trucks. Tap any service to book it in under a minute.</p>
+      </div>
+
+      <!-- asymmetric masonry-style grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 auto-rows-[170px] gap-3.5">
+        <button onclick="openBooking('Tires')" data-reveal data-delay="1" class="card card-hl group text-left p-6 flex flex-col justify-between row-span-2 col-span-2 lg:col-span-2">
+          <div class="flex items-start justify-between">
+            <span class="text-3xl">🛞</span>
+            <span class="eyebrow !tracking-[.2em] opacity-60 group-hover:opacity-100 transition-opacity">01</span>
+          </div>
+          <div>
+            <h3 class="font-display font-semibold text-2xl text-ink mb-1.5">Tires &amp; Wheels</h3>
+            <p class="text-mute text-[.96rem] max-w-[42ch] mb-4">Shop, install, rotate and balance — every major brand, mounted and road-ready the same day.</p>
+            <span class="swipe">Schedule <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </button>
+        <button onclick="openBooking('Oil Change')" data-reveal data-delay="2" class="card card-hl group text-left p-5 flex flex-col justify-between">
+          <span class="text-2xl">🛢️</span>
+          <div><h3 class="font-display font-semibold text-lg text-ink">Oil Changes</h3><span class="swipe text-[.82rem]">Book →</span></div>
+        </button>
+        <button onclick="openBooking('Brakes')" data-reveal data-delay="3" class="card card-hl group text-left p-5 flex flex-col justify-between">
+          <span class="text-2xl">🛑</span>
+          <div><h3 class="font-display font-semibold text-lg text-ink">Brakes</h3><span class="swipe text-[.82rem]">Book →</span></div>
+        </button>
+        <button onclick="openBooking('Alignment')" data-reveal data-delay="1" class="card card-hl group text-left p-5 flex flex-col justify-between">
+          <span class="text-2xl">📐</span>
+          <div><h3 class="font-display font-semibold text-lg text-ink">Alignment</h3><span class="swipe text-[.82rem]">Book →</span></div>
+        </button>
+        <button onclick="openBooking('Engine Repair')" data-reveal data-delay="2" class="card card-hl group text-left p-6 flex flex-col justify-between row-span-2">
+          <div class="flex items-start justify-between"><span class="text-3xl">🔧</span><span class="eyebrow !tracking-[.2em] opacity-60 group-hover:opacity-100 transition-opacity">05</span></div>
+          <div><h3 class="font-display font-semibold text-xl text-ink mb-1.5">Engine Repair</h3><p class="text-mute text-[.92rem] mb-4">Diagnostics, check-engine lights and major repair — done once, done right.</p><span class="swipe">Schedule →</span></div>
+        </button>
+        <button onclick="openBooking('Battery')" data-reveal data-delay="3" class="card card-hl group text-left p-5 flex flex-col justify-between">
+          <span class="text-2xl">🔋</span>
+          <div><h3 class="font-display font-semibold text-lg text-ink">Batteries</h3><span class="swipe text-[.82rem]">Book →</span></div>
+        </button>
+        <button onclick="openBooking('Inspection')" data-reveal data-delay="1" class="card card-hl group text-left p-5 flex flex-col justify-between">
+          <span class="text-2xl">📋</span>
+          <div><h3 class="font-display font-semibold text-lg text-ink">Inspections</h3><span class="swipe text-[.82rem]">Book →</span></div>
+        </button>
+        <button onclick="openBooking('A/C & Heating')" data-reveal data-delay="2" class="card card-hl group text-left p-5 flex flex-col justify-between col-span-2 lg:col-span-1">
+          <span class="text-2xl">❄️</span>
+          <div><h3 class="font-display font-semibold text-lg text-ink">A/C &amp; Heating</h3><span class="swipe text-[.82rem]">Book →</span></div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIRES BAND -->
+  <section id="tires" class="relative overflow-hidden border-y border-line/70">
+    <div class="absolute inset-0 bg-gradient-to-br from-panel2 to-base"></div>
+    <span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-10 left-[-2%] font-display font-semibold text-[20vw] leading-none text-gold/[.04] hidden md:block">TIRE</span>
+    <div class="relative max-w-[1180px] mx-auto px-5 md:px-7 py-20 md:py-24 grid md:grid-cols-[1.3fr_auto] gap-10 md:items-center">
+      <div data-reveal>
+        <div class="eyebrow mb-4">The Tire Center</div>
+        <h2 class="font-display font-semibold text-[clamp(1.9rem,4vw,3rem)] leading-[1.04] text-ink max-w-[20ch]">Need rubber? We carry every major brand — and we'll pull your size.</h2>
+        <p class="text-mute text-[1.08rem] mt-5 max-w-[52ch]">Michelin, Goodyear, Bridgestone and more. Mounted, balanced and road-ready the same day. Tell us your vehicle and we'll handle the rest.</p>
+      </div>
+      <div data-reveal data-delay="2" class="flex md:flex-col gap-3">
+        <button class="btn btn-cta px-7 py-4 text-[1.02rem]" onclick="openBooking('Tires')">Find My Tires</button>
+        <a class="btn btn-gold px-7 py-4 text-[1.02rem]" href="tel:+19525550142">Ask a Tech</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section id="why" class="py-24 md:py-32">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7">
+      <div class="max-w-[34ch] mb-16" data-reveal>
+        <div class="eyebrow mb-4">Why Drivers Trust Us</div>
+        <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.3rem)] leading-[1.02] text-ink">The shop your family has used for generations.</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-x-16 gap-y-12">
+        <div class="flex gap-6 md:translate-y-2" data-reveal data-delay="1">
+          <span class="font-display font-semibold text-gold text-[2.2rem] leading-none shrink-0">01</span>
+          <div><h3 class="font-display font-semibold text-xl text-ink mb-2">No surprises</h3><p class="text-mute leading-relaxed">You approve a written estimate before we touch anything. The quoted price is the price you pay — full stop.</p></div>
+        </div>
+        <div class="flex gap-6 md:-translate-y-2" data-reveal data-delay="2">
+          <span class="font-display font-semibold text-gold text-[2.2rem] leading-none shrink-0">02</span>
+          <div><h3 class="font-display font-semibold text-xl text-ink mb-2">A real warranty</h3><p class="text-mute leading-relaxed">Every repair backed 24 months / 24,000 miles — honored here and at thousands of shops nationwide.</p></div>
+        </div>
+        <div class="flex gap-6 md:translate-y-2" data-reveal data-delay="1">
+          <span class="font-display font-semibold text-gold text-[2.2rem] leading-none shrink-0">03</span>
+          <div><h3 class="font-display font-semibold text-xl text-ink mb-2">We explain it</h3><p class="text-mute leading-relaxed">No jargon, no upsell. We show you what's worn and what can wait — with photos, every time.</p></div>
+        </div>
+        <div class="flex gap-6 md:-translate-y-2" data-reveal data-delay="2">
+          <span class="font-display font-semibold text-gold text-[2.2rem] leading-none shrink-0">04</span>
+          <div><h3 class="font-display font-semibold text-xl text-ink mb-2">Back on the road fast</h3><p class="text-mute leading-relaxed">Most services same-day, with free loaner cars and after-hours key drop when life won't slow down.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUPONS -->
+  <section id="coupons" class="py-24 md:py-32 border-t border-line/70 bg-panel/30">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7">
+      <div class="flex flex-col items-center text-center mb-14" data-reveal>
+        <div class="eyebrow mb-4">Current Offers</div>
+        <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.2rem)] leading-[1.02] text-ink">Worth a trip to the bay.</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="card group p-7 flex flex-col relative overflow-hidden" data-reveal data-delay="1">
+          <span class="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-gold/30 to-transparent"></span>
+          <div class="font-display font-semibold text-[2.6rem] leading-none text-gold">$20 <span class="text-[1rem] align-top text-mute">off</span></div>
+          <h3 class="font-display font-semibold text-xl text-ink mt-3">Full Synthetic Oil Change</h3>
+          <p class="text-mute text-[.95rem] mt-2 flex-1">Premium full-synthetic oil and filter, plus a free multi-point inspection.</p>
+          <small class="block text-muted2 text-[.78rem] my-4">Present at check-in. Not valid with other offers.</small>
+          <button class="btn btn-cta w-full" onclick="openBooking('Oil Change')">Redeem &amp; Book</button>
+        </div>
+        <div class="card group p-7 flex flex-col relative overflow-hidden md:-translate-y-4" data-reveal data-delay="2">
+          <span class="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-gold/30 to-transparent"></span>
+          <div class="font-display font-semibold text-[2.6rem] leading-none text-gold">Free</div>
+          <h3 class="font-display font-semibold text-xl text-ink mt-3">Brake Inspection</h3>
+          <p class="text-mute text-[.95rem] mt-2 flex-1">Complete brake inspection — pads, rotors, lines and fluid — at no charge.</p>
+          <small class="block text-muted2 text-[.78rem] my-4">By appointment. Most vehicles.</small>
+          <button class="btn btn-cta w-full" onclick="openBooking('Brakes')">Redeem &amp; Book</button>
+        </div>
+        <div class="card group p-7 flex flex-col relative overflow-hidden" data-reveal data-delay="3">
+          <span class="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-gold/30 to-transparent"></span>
+          <div class="font-display font-semibold text-[2.6rem] leading-none text-gold">$50 <span class="text-[1rem] align-top text-mute">off</span></div>
+          <h3 class="font-display font-semibold text-xl text-ink mt-3">Any Repair Over $300</h3>
+          <p class="text-mute text-[.95rem] mt-2 flex-1">Take $50 off any single repair ticket of $300 or more. Stack it with your warranty.</p>
+          <small class="block text-muted2 text-[.78rem] my-4">One per visit. Excludes tires.</small>
+          <button class="btn btn-cta w-full" onclick="openBooking()">Redeem &amp; Book</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews" class="py-24 md:py-32">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7">
+      <div class="grid md:grid-cols-[1fr_auto] md:items-end gap-6 mb-14" data-reveal>
+        <div>
+          <div class="eyebrow mb-4">Five-Star Service</div>
+          <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.2rem)] leading-[1.02] text-ink max-w-[16ch]">What Apple Valley says about us.</h2>
+        </div>
+        <div class="flex items-center gap-3 text-mute md:pb-2">
+          <span class="text-gold text-xl tracking-[2px]">★★★★★</span>
+          <span><b class="text-ink font-display font-semibold">4.9</b> · 312 Google reviews</span>
+        </div>
+      </div>
+      <!-- masonry via columns -->
+      <div class="columns-1 md:columns-3 gap-4 [&>*]:mb-4">
+        <figure class="card p-7 break-inside-avoid" data-reveal data-delay="1">
+          <div class="text-gold tracking-[2px] mb-4">★★★★★</div>
+          <blockquote class="text-ink/90 leading-relaxed">Took my truck in for brakes expecting a huge bill. They showed me the pads still had life and only charged for what I needed. Customer for life.</blockquote>
+          <figcaption class="flex items-center gap-3 mt-6 pt-5 border-t border-line/60">
+            <span class="w-10 h-10 rounded-full bg-gold/15 border border-gold/30 grid place-items-center font-display font-semibold text-gold">DK</span>
+            <span><b class="block text-ink text-[.96rem]">Dave K.</b><small class="text-muted2">Local Guide · 2 weeks ago</small></span>
+          </figcaption>
+        </figure>
+        <figure class="card p-7 break-inside-avoid" data-reveal data-delay="2">
+          <div class="text-gold tracking-[2px] mb-4">★★★★★</div>
+          <blockquote class="text-ink/90 leading-relaxed">Check-engine light had three other shops stumped. Summit found it in an hour, fixed it same day, and the price was fair. I won't go anywhere else now.</blockquote>
+          <figcaption class="flex items-center gap-3 mt-6 pt-5 border-t border-line/60">
+            <span class="w-10 h-10 rounded-full bg-gold/15 border border-gold/30 grid place-items-center font-display font-semibold text-gold">MR</span>
+            <span><b class="block text-ink text-[.96rem]">Maria R.</b><small class="text-muted2">5 reviews · 1 month ago</small></span>
+          </figcaption>
+        </figure>
+        <figure class="card p-7 break-inside-avoid" data-reveal data-delay="3">
+          <div class="text-gold tracking-[2px] mb-4">★★★★★</div>
+          <blockquote class="text-ink/90 leading-relaxed">Loaner car ready at drop-off, text update with photos by lunch, car done by 4. This is how every shop should run.</blockquote>
+          <figcaption class="flex items-center gap-3 mt-6 pt-5 border-t border-line/60">
+            <span class="w-10 h-10 rounded-full bg-gold/15 border border-gold/30 grid place-items-center font-display font-semibold text-gold">TS</span>
+            <span><b class="block text-ink text-[.96rem]">Tom S.</b><small class="text-muted2">12 reviews · 1 month ago</small></span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNAL / ARTICLES -->
+  <section id="tips" class="py-24 md:py-32 border-t border-line/70 bg-panel/30">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7">
+      <div class="grid md:grid-cols-[1fr_auto] md:items-end gap-6 mb-14" data-reveal>
+        <div>
+          <div class="eyebrow mb-4">From the Shop Floor</div>
+          <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.2rem)] leading-[1.02] text-ink max-w-[16ch]">Straight answers, no jargon.</h2>
+        </div>
+        <p class="text-mute text-[1.05rem] max-w-[34ch] md:text-right md:pb-2">The questions drivers actually ask — and the kind of advice that helps neighbors find us.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <a href="#tips" class="card group overflow-hidden flex flex-col md:row-span-2" data-reveal data-delay="1">
+          <div class="h-56 md:h-72 bg-gradient-to-br from-steel to-base grid place-items-center text-5xl relative">
+            <span>🛢️</span>
+            <span class="absolute inset-0 bg-gold/0 group-hover:bg-gold/[.06] transition-colors"></span>
+          </div>
+          <div class="p-7 flex-1 flex flex-col">
+            <span class="eyebrow !tracking-[.18em]">Maintenance</span>
+            <h3 class="font-display font-semibold text-xl text-ink mt-3 mb-2 leading-snug">How often should you really change your oil?</h3>
+            <p class="text-mute text-[.95rem] flex-1">The 3,000-mile rule is mostly outdated. Here's what your owner's manual actually says — and why Minnesota winters change the math.</p>
+            <span class="swipe mt-5">Read more <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+        <a href="#tips" class="card group overflow-hidden flex flex-col" data-reveal data-delay="2">
+          <div class="h-28 bg-gradient-to-br from-steel to-base grid place-items-center text-3xl">🛑</div>
+          <div class="p-6 flex-1 flex flex-col">
+            <span class="eyebrow !tracking-[.18em]">Safety</span>
+            <h3 class="font-display font-semibold text-lg text-ink mt-2 mb-1.5 leading-snug">5 signs your brakes need attention</h3>
+            <p class="text-mute text-[.92rem] flex-1">Squealing, a soft pedal, pulling to one side — what each warning sign means and how long you can safely wait.</p>
+            <span class="swipe mt-4 text-[.85rem]">Read more →</span>
+          </div>
+        </a>
+        <a href="#tips" class="card group overflow-hidden flex flex-col" data-reveal data-delay="3">
+          <div class="h-28 bg-gradient-to-br from-steel to-base grid place-items-center text-3xl">🔋</div>
+          <div class="p-6 flex-1 flex flex-col">
+            <span class="eyebrow !tracking-[.18em]">Winter</span>
+            <h3 class="font-display font-semibold text-lg text-ink mt-2 mb-1.5 leading-snug">Why winter kills car batteries in Minnesota</h3>
+            <p class="text-mute text-[.92rem] flex-1">Cold cuts battery power by up to 50%. How to know if yours will survive the next cold snap — and when to replace it.</p>
+            <span class="swipe mt-4 text-[.85rem]">Read more →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section id="visit" class="py-24 md:py-32">
+    <div class="max-w-[1180px] mx-auto px-5 md:px-7">
+      <div class="grid md:grid-cols-2 border border-line rounded-lg overflow-hidden bg-panel/40" data-reveal>
+        <div class="p-9 md:p-12">
+          <div class="eyebrow mb-4">Find Us</div>
+          <h2 class="font-display font-semibold text-[clamp(1.8rem,3.6vw,2.6rem)] leading-[1.04] text-ink">Hours &amp; location</h2>
+          <p class="text-mute text-[1.05rem] mt-5 leading-relaxed">1450 Cedar Ave<br>Apple Valley, MN 55124</p>
+          <ul class="my-7">
+            <li class="flex justify-between py-3.5 border-b border-line/60"><span class="text-ink font-medium">Monday – Friday</span><span class="text-ink font-medium">7:30 AM – 6:00 PM</span></li>
+            <li class="flex justify-between py-3.5 border-b border-line/60"><span class="text-mute">Saturday</span><span class="text-mute">8:00 AM – 2:00 PM</span></li>
+            <li class="flex justify-between py-3.5"><span class="text-mute">Sunday</span><span class="text-mute">Closed</span></li>
+          </ul>
+          <div class="flex flex-wrap gap-3">
+            <button class="btn btn-cta px-6 py-3.5" onclick="openBooking()">Schedule Service</button>
+            <a class="btn btn-gold px-6 py-3.5" href="tel:+19525550142">
+              <svg class="ph-ic text-gold" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+              Call Us
+            </a>
+          </div>
+        </div>
+        <div class="min-h-[340px] md:min-h-full bg-steel">
+          <iframe title="Map to Summit Auto Care" loading="lazy" class="w-full h-full" style="border:0;filter:grayscale(.4) contrast(1.05) brightness(.85)" src="https://www.openstreetmap.org/export/embed.html?bbox=-93.23%2C44.71%2C-93.18%2C44.75&layer=mapnik&marker=44.731%2C-93.217"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="relative overflow-hidden border-t border-line/70">
+    <div class="absolute inset-0 bg-gradient-to-b from-panel2 to-base"></div>
+    <div class="absolute inset-0" style="background:radial-gradient(600px 300px at 50% 0%, rgba(195,138,79,.14), transparent 65%)"></div>
+    <div class="relative max-w-[1180px] mx-auto px-5 md:px-7 py-24 md:py-32 text-center" data-reveal>
+      <div class="eyebrow mb-5">Let's Get You Rolling</div>
+      <h2 class="font-display font-semibold text-[clamp(2.2rem,5.4vw,4rem)] leading-[1] text-ink max-w-[20ch] mx-auto">Car trouble? Let's get you back on the road.</h2>
+      <p class="text-mute text-[1.15rem] mt-6 max-w-[46ch] mx-auto">Same-day appointments available. Book online in 60 seconds — or call and talk to a real tech.</p>
+      <div class="flex flex-wrap items-center justify-center gap-4 mt-10">
+        <button class="btn btn-cta px-8 py-4 text-[1.05rem]" onclick="openBooking()">Schedule Online</button>
+        <span class="text-muted2 font-medium">or</span>
+        <a class="btn btn-gold px-8 py-4 text-[1.05rem]" href="tel:+19525550142">Call (952) 555-0142</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-line/70 py-12">
+  <div class="max-w-[1180px] mx-auto px-5 md:px-7 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <a href="#top" class="flex items-center gap-3">
+      <span class="w-9 h-9 grid place-items-center font-display font-semibold text-base bg-gold rounded-[3px]">S</span>
+      <b class="font-display font-semibold text-ink">Summit Auto Care</b>
+    </a>
+    <div class="text-mute text-[.9rem]">1450 Cedar Ave, Apple Valley, MN · <a href="tel:+19525550142" class="text-gold2 hover:text-gold transition-colors">(952) 555-0142</a></div>
+    <div class="text-muted2 text-[.85rem]">© 2026 Summit Auto Care · Serving Apple Valley since 1926</div>
+  </div>
+</footer>
+
+<!-- MOBILE CALL BAR -->
+<div class="mcall">
+  <a class="btn btn-cta" href="tel:+19525550142">
+    <svg class="ph-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+    Call Now
+  </a>
+  <button class="btn btn-gold" onclick="openBooking()">Schedule</button>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal" id="bookModal" role="dialog" aria-modal="true" aria-label="Schedule service">
+  <div class="sheet">
+    <div class="sheet-top"><b>Schedule Service</b><button class="x" aria-label="Close" onclick="closeBooking()">×</button></div>
+    <div class="steps" id="bk-steps">
+      <div data-s="1">1 · Service</div><div data-s="2">2 · Time</div><div data-s="3">3 · Details</div>
+    </div>
+    <div class="sheet-body" id="bk-body"></div>
+    <div class="sheet-foot" id="bk-foot"></div>
+  </div>
+</div>
+
+<script>
+  // ---- header scroll state + scroll reveal ----
+  var hdr=document.querySelector('header');
+  function onScroll(){ if(window.scrollY>20) hdr.classList.add('scrolled'); else hdr.classList.remove('scrolled'); }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('[data-reveal]').forEach(function(el){ io.observe(el); });
+
+  function closeNav(){document.getElementById('mnav').classList.remove('open');}
+
+  // ---- booking flow (functionality preserved) ----
+  var SERVICES=[["Tires","🛞"],["Oil Change","🛢️"],["Brakes","🛑"],["Alignment","📐"],["Battery","🔋"],["Engine Repair","🔧"],["Inspection","📋"],["A/C & Heating","❄️"]];
+  var TIMES=["8:00","9:30","11:00","1:00","2:30","4:00"];
+  var bk={step:1,service:null,date:null,time:null,name:"",phone:""};
+
+  function nextDays(n){
+    var out=[],d=new Date(),names=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],mon=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    for(var i=0;i<n;i++){var x=new Date(d.getTime()+i*864e5);out.push({label:(i===0?"Today":names[x.getDay()]),sub:mon[x.getMonth()]+" "+x.getDate(),key:x.toDateString()});}
+    return out;
+  }
+
+  function openBooking(preset){
+    bk={step:preset?2:1,service:preset||null,date:null,time:null,name:"",phone:""};
+    document.getElementById('bookModal').classList.add('open');
+    document.body.style.overflow='hidden';
+    render();
+  }
+  function closeBooking(){document.getElementById('bookModal').classList.remove('open');document.body.style.overflow='';}
+  function pickService(s){bk.service=s;bk.step=2;render();}
+  function pickDate(k){bk.date=k;render();}
+  function pickTime(t){bk.time=t;bk.step=3;render();}
+  function back(){if(bk.step>1){bk.step--;render();}}
+  function submitBooking(){
+    var n=document.getElementById('bk-name').value.trim(),p=document.getElementById('bk-phone').value.trim();
+    if(!n||!p){document.getElementById('bk-err').style.display='block';return;}
+    bk.name=n;bk.phone=p;bk.step=4;render();
+  }
+
+  function render(){
+    var tabs=document.querySelectorAll('#bk-steps div');
+    tabs.forEach(function(t){t.classList.toggle('on',parseInt(t.dataset.s)===Math.min(bk.step,3));});
+    document.getElementById('bk-steps').style.display=bk.step===4?'none':'flex';
+    var body=document.getElementById('bk-body'),foot=document.getElementById('bk-foot');
+
+    if(bk.step===1){
+      var g=SERVICES.map(function(s){return '<button class="opt'+(bk.service===s[0]?' sel':'')+'" onclick="pickService(\''+s[0].replace(/'/g,"\\'")+'\')"><span>'+s[1]+'</span>'+s[0]+'</button>';}).join('');
+      body.innerHTML='<h4>What do you need done?</h4><div class="opt-grid">'+g+'</div>';
+      foot.innerHTML='<span class="lnk" style="cursor:default">Step 1 of 3</span>';
+    }
+    else if(bk.step===2){
+      var days=nextDays(6).map(function(d){return '<button class="chip'+(bk.date===d.key?' sel':'')+'" onclick="pickDate(\''+d.key+'\')">'+d.label+'<small>'+d.sub+'</small></button>';}).join('');
+      var times=bk.date?('<h4 style="margin-top:22px">Pick a time</h4><div class="chip-row">'+TIMES.map(function(t){return '<button class="chip'+(bk.time===t?' sel':'')+'" onclick="pickTime(\''+t+'\')">'+t+'</button>';}).join('')+'</div>'):'';
+      body.innerHTML='<h4>Choose a day for your '+bk.service+'</h4><div class="chip-row">'+days+'</div>'+times;
+      foot.innerHTML='<button class="lnk" onclick="back()">← Back</button><span class="lnk" style="cursor:default">Step 2 of 3</span>';
+    }
+    else if(bk.step===3){
+      body.innerHTML='<h4>Almost done — your details</h4>'
+        +'<div class="err" id="bk-err">Please add your name and phone so we can confirm.</div>'
+        +'<div class="row2"><div class="fld"><label>Year / Make / Model</label><input id="bk-veh" placeholder="2019 Honda CR-V"></div><div class="fld"><label>Mileage (optional)</label><input id="bk-mi" placeholder="62,000"></div></div>'
+        +'<div class="fld"><label>Full name *</label><input id="bk-name" placeholder="Jane Driver"></div>'
+        +'<div class="row2"><div class="fld"><label>Phone *</label><input id="bk-phone" placeholder="(952) 555-0199"></div><div class="fld"><label>Email (optional)</label><input id="bk-email" placeholder="you@email.com"></div></div>';
+      foot.innerHTML='<button class="lnk" onclick="back()">← Back</button><button class="btn btn-cta" onclick="submitBooking()">Request Appointment</button>';
+    }
+    else{
+      var dd=new Date(bk.date),mon=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      var nice=mon[dd.getMonth()]+" "+dd.getDate();
+      body.innerHTML='<div class="conf"><div class="ck">✓</div><h4>Appointment requested!</h4>'
+        +'<p>Thanks, '+bk.name+'. We\'ll text <b style="color:#c38a4f">'+bk.phone+'</b> shortly to confirm your spot.</p>'
+        +'<div class="summ"><div><span>Service</span><b>'+bk.service+'</b></div><div><span>Date</span><b>'+nice+'</b></div><div><span>Time</span><b>'+bk.time+'</b></div></div></div>';
+      foot.innerHTML='<span></span><button class="btn btn-solidgold" onclick="closeBooking()">Done</button>';
+    }
+  }
+
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBooking();});
+  document.getElementById('bookModal').addEventListener('click',function(e){if(e.target===this)closeBooking();});
+</script>
+</body>
+</html>
