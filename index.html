@@ -496,45 +496,53 @@
   <!-- JOURNAL / ARTICLES -->
   <section id="tips" class="py-24 md:py-32 border-t border-line/70 bg-panel/30">
     <div class="max-w-[1180px] mx-auto px-5 md:px-7">
-      <div class="grid md:grid-cols-[1fr_auto] md:items-end gap-6 mb-14" data-reveal>
+      <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12" data-reveal>
         <div>
           <div class="eyebrow mb-4">From the Shop Floor</div>
-          <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.2rem)] leading-[1.02] text-ink max-w-[16ch]">Straight answers, no jargon.</h2>
+          <h2 class="font-display font-semibold text-[clamp(2rem,4.4vw,3.2rem)] leading-[1.02] text-ink">Straight answers, no jargon.</h2>
+          <p class="text-mute text-[1.05rem] mt-3 max-w-md">The questions drivers actually ask — and the kind of advice that helps neighbors find us.</p>
         </div>
-        <p class="text-mute text-[1.05rem] max-w-[34ch] md:text-right md:pb-2">The questions drivers actually ask — and the kind of advice that helps neighbors find us.</p>
+        <a href="#tips" class="swipe hidden md:inline-flex shrink-0 md:pb-2">View all articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <a href="#tips" class="card group overflow-hidden flex flex-col md:row-span-2" data-reveal data-delay="1">
-          <div class="h-56 md:h-72 bg-gradient-to-br from-steel to-base grid place-items-center text-5xl relative">
+      <div class="grid md:grid-cols-3 gap-6">
+        <a href="#tips" class="card card-hl group overflow-hidden flex flex-col" data-reveal data-delay="1">
+          <div class="h-48 bg-gradient-to-br from-steel to-base grid place-items-center text-6xl relative">
             <span>🛢️</span>
             <span class="absolute inset-0 bg-gold/0 group-hover:bg-gold/[.06] transition-colors"></span>
           </div>
-          <div class="p-7 flex-1 flex flex-col">
+          <div class="p-8 flex-1 flex flex-col">
             <span class="eyebrow !tracking-[.18em]">Maintenance</span>
-            <h3 class="font-display font-semibold text-xl text-ink mt-3 mb-2 leading-snug">How often should you really change your oil?</h3>
-            <p class="text-mute text-[.95rem] flex-1">The 3,000-mile rule is mostly outdated. Here's what your owner's manual actually says — and why Minnesota winters change the math.</p>
-            <span class="swipe mt-5">Read more <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            <h3 class="font-display font-semibold text-xl text-ink mt-3 mb-3 leading-snug group-hover:text-gold transition-colors">How often should you really change your oil?</h3>
+            <p class="text-mute text-[.95rem] flex-1 line-clamp-3">The 3,000-mile rule is mostly outdated. Here's what your owner's manual actually says — and why Minnesota winters change the math.</p>
+            <span class="swipe mt-6 text-[.85rem]">Read more <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </div>
         </a>
-        <a href="#tips" class="card group overflow-hidden flex flex-col" data-reveal data-delay="2">
-          <div class="h-28 bg-gradient-to-br from-steel to-base grid place-items-center text-3xl">🛑</div>
-          <div class="p-6 flex-1 flex flex-col">
+        <a href="#tips" class="card card-hl group overflow-hidden flex flex-col" data-reveal data-delay="2">
+          <div class="h-48 bg-gradient-to-br from-steel to-base grid place-items-center text-6xl relative">
+            <span>🛑</span>
+            <span class="absolute inset-0 bg-gold/0 group-hover:bg-gold/[.06] transition-colors"></span>
+          </div>
+          <div class="p-8 flex-1 flex flex-col">
             <span class="eyebrow !tracking-[.18em]">Safety</span>
-            <h3 class="font-display font-semibold text-lg text-ink mt-2 mb-1.5 leading-snug">5 signs your brakes need attention</h3>
-            <p class="text-mute text-[.92rem] flex-1">Squealing, a soft pedal, pulling to one side — what each warning sign means and how long you can safely wait.</p>
-            <span class="swipe mt-4 text-[.85rem]">Read more →</span>
+            <h3 class="font-display font-semibold text-xl text-ink mt-3 mb-3 leading-snug group-hover:text-gold transition-colors">5 signs your brakes need attention</h3>
+            <p class="text-mute text-[.95rem] flex-1 line-clamp-3">Squealing, a soft pedal, pulling to one side — what each warning sign means and how long you can safely wait.</p>
+            <span class="swipe mt-6 text-[.85rem]">Read more <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </div>
         </a>
-        <a href="#tips" class="card group overflow-hidden flex flex-col" data-reveal data-delay="3">
-          <div class="h-28 bg-gradient-to-br from-steel to-base grid place-items-center text-3xl">🔋</div>
-          <div class="p-6 flex-1 flex flex-col">
-            <span class="eyebrow !tracking-[.18em]">Winter</span>
-            <h3 class="font-display font-semibold text-lg text-ink mt-2 mb-1.5 leading-snug">Why winter kills car batteries in Minnesota</h3>
-            <p class="text-mute text-[.92rem] flex-1">Cold cuts battery power by up to 50%. How to know if yours will survive the next cold snap — and when to replace it.</p>
-            <span class="swipe mt-4 text-[.85rem]">Read more →</span>
+        <a href="#tips" class="card card-hl group overflow-hidden flex flex-col" data-reveal data-delay="3">
+          <div class="h-48 bg-gradient-to-br from-steel to-base grid place-items-center text-6xl relative">
+            <span>🔋</span>
+            <span class="absolute inset-0 bg-gold/0 group-hover:bg-gold/[.06] transition-colors"></span>
+          </div>
+          <div class="p-8 flex-1 flex flex-col">
+            <span class="eyebrow !tracking-[.18em]">Winter Prep</span>
+            <h3 class="font-display font-semibold text-xl text-ink mt-3 mb-3 leading-snug group-hover:text-gold transition-colors">Why winter kills car batteries in Minnesota</h3>
+            <p class="text-mute text-[.95rem] flex-1 line-clamp-3">Cold cuts battery power by up to 50%. How to know if yours will survive the next cold snap — and when to replace it.</p>
+            <span class="swipe mt-6 text-[.85rem]">Read more <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </div>
         </a>
       </div>
+      <a href="#tips" class="swipe md:hidden mt-8">View all articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </section>
 
